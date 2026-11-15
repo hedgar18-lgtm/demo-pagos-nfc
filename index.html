@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AIT3D Software - Datos de Transferencia Bancaria</title>
+
+  <!-- Meta tags SEO y Compartir (Open Graph & Twitter) -->
+  <meta name="description"
+    content="Información oficial de cuentas bancarias y CLABE para transferencias a AIT3D Software. Copia los datos con un solo clic.">
+  <meta property="og:title" content="AIT3D - Datos de Transferencia">
+  <meta property="og:description"
+    content="Cuentas oficiales BBVA, Santander y Nu para transferencias a AIT3D. Copia con un toque.">
+  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0b1c30">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="apple-touch-icon" href="assets/logo.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-page: #f0f4f8;
+      --text-main: #0b1c30;
+      --text-muted: #475569;
+      --primary-emerald: #009b62;
+      --primary-emerald-hover: #008554;
+      --whatsapp-green: #18cf67;
+      --whatsapp-green-hover: #15bd5d;
+      --whatsapp-dark: #07301c;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem 1rem 2.5rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .brand-logo-wrap {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 9999px;
+      background: #ffffff;
+      padding: 0.35rem;
+      border: 2px solid rgba(16, 185, 129, 0.2);
+      box-shadow: 0 4px 12px rgba(11, 28, 48, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.25s ease;
+    }
+
+    .brand-logo-wrap:hover {
+      transform: scale(1.05);
+    }
+
+    .brand-logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 9999px;
+    }
+
+    .brand-name {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
+      margin-top: 0.5rem;
+    }
+
+    .brand-tagline {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 0.1rem;
+    }
+
+    /* Cards Deck */
+    .cards-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .bank-card {
+      position: relative;
+      border-radius: 1.75rem;
+      padding: 1.5rem;
+      color: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .bank-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Specular Light Reflection */
+    .bank-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 40%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* BBVA Theme */
+    .card-bbva {
+      background: linear-gradient(135deg, #003b8e 0%, #004da3 55%, #002868 100%);
+      border: 1px solid rgba(96, 165, 250, 0.25);
+      box-shadow: 0 16px 32px -8px rgba(0, 59, 142, 0.35);
+    }
+
+    /* Santander Theme */
+    .card-santander {
+      background: linear-gradient(135deg, #d40000 0%, #c00000 55%, #8f0000 100%);
+      border: 1px solid rgba(252, 165, 165, 0.25);
+      box-shadow: 0 16px 32px -8px rgba(212, 0, 0, 0.32);
+    }
+
+    /* Nu Theme */
+    .card-nu {
+      background: linear-gradient(135deg, #6b169e 0%, #520f80 55%, #360458 100%);
+      border: 1px solid rgba(216, 180, 254, 0.25);
+      box-shadow: 0 16px 32px -8px rgba(107, 22, 158, 0.35);
+    }
+
+    /* Card Elements */
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bank-brand {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .card-santander .bank-brand {
+      text-transform: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nfc-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      opacity: 0.85;
+    }
+
+    .card-data-section {
+      margin-top: 1.25rem;
+    }
+
+    .card-data-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      opacity: 0.9;
+    }
+
+    .card-bbva .card-data-label {
+      color: #bfdbfe;
+    }
+
+    .card-santander .card-data-label {
+      color: #fecaca;
+    }
+
+    .card-nu .card-data-label {
+      color: #e9d5ff;
+    }
+
+    .data-pill {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 0.85rem;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .data-number {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #ffffff;
+      user-select: all;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+
+    .data-number::-webkit-scrollbar {
+      display: none;
+    }
+
+    .copy-btn {
+      background: var(--primary-emerald);
+      color: #ffffff;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.45rem 0.8rem;
+      border-radius: 0.55rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: all 0.18s ease;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-emerald-hover);
+    }
+
+    .copy-btn:active {
+      transform: scale(0.95);
+    }
+
+    .card-santander .copy-btn {
+      background: #ffffff;
+      color: #cc0000;
+      font-weight: 800;
+    }
+
+    .card-santander .copy-btn:hover {
+      background: #fef2f2;
+    }
+
+    .card-nu .copy-btn {
+      background: #e058c7;
+      color: #ffffff;
+    }
+
+    .card-nu .copy-btn:hover {
+      background: #cf4bb7;
+    }
+
+    .copy-btn.copied {
+      background: #10b981 !important;
+      color: #ffffff !important;
+    }
+
+    .copy-icon {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .card-holder {
+      margin-top: 1rem;
+    }
+
+    .holder-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .holder-name {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+    }
+
+    /* Steps Section */
+    .steps-card {
+      width: 100%;
+      background: #ffffff;
+      border-radius: 1.5rem;
+      padding: 1.35rem 1.25rem;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 4px 16px -2px rgba(11, 28, 48, 0.04);
+    }
+
+    .steps-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #006948;
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .steps-title svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #006948;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .step-badge {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 9999px;
+      background: #d1fae5;
+      color: #065f46;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .step-text {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: #3d4a42;
+    }
+
+    .step-text strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    /* WhatsApp Button CTA */
+    .whatsapp-btn {
+      width: 100%;
+      background: var(--whatsapp-green);
+      color: var(--whatsapp-dark);
+      text-decoration: none;
+      border-radius: 1.25rem;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 10px 24px -4px rgba(24, 207, 103, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.25rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .whatsapp-btn:hover {
+      background: var(--whatsapp-green-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px -4px rgba(24, 207, 103, 0.45);
+    }
+
+    .whatsapp-btn:active {
+      transform: scale(0.98);
+    }
+
+    .whatsapp-main-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #07301c;
+    }
+
+    .whatsapp-main-row svg {
+      width: 1.4rem;
+      height: 1.4rem;
+      fill: currentColor;
+    }
+
+    .whatsapp-subtext {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #064225;
+      opacity: 0.95;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #e8f0fe;
+      color: #334155;
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      border: 1px solid #dbeafe;
+      font-size: 0.75rem;
+      font-weight: 500;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .footer-pill img {
+      width: 1rem;
+      height: 1rem;
+      object-fit: contain;
+      border-radius: 9999px;
+    }
+
+    .footer-pill strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0b1c30;
+      color: #ffffff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 9999;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    #toast svg {
+      width: 18px;
+      height: 18px;
+      color: #10b981;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <!-- Header / Brand -->
+    <header class="header">
+      <div class="brand-logo-wrap">
+        <img src="assets/logo.png" alt="AIT3D Software" width="80" height="80">
+      </div>
+      <h1 class="brand-name">AIT3D</h1>
+      <p class="brand-tagline">Software &amp; Soluciones Digitales</p>
+    </header>
+
+    <!-- Bank Cards Container -->
+    <div class="cards-container">
+
+      <!-- BBVA Card -->
+      <section class="bank-card card-bbva" aria-label="Tarjeta BBVA">
+        <div class="card-top">
+          <span class="bank-brand">BBVA</span>
+          <!-- Contactless Waves SVG -->
+          <svg class="nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round">
+            <path d="M8.5 16.5a6.5 6.5 0 0 1 0-9"></path>
+            <path d="M12 19a10 10 0 0 0 0-14"></path>
+            <path d="M15.5 21.5a13.5 13.5 0 0 0 0-19"></path>
+          </svg>
+        </div>
+
+        <div class="card-data-section">
+          <p class="card-data-label">CLABE INTERBANCARIA (18 DÍGITOS)</p>
+          <div class="data-pill">
+            <span class="data-number" id="bbva-number">012180015489201948</span>
+            <button type="button" class="copy-btn" onclick="copyCardData('bbva-number', this, 'CLABE BBVA')">
+              <svg class="copy-icon" viewBox="0 0 24 24">
+                <path
+                  d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+              </svg>
+              <span>Copiar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-holder">
+          <p class="holder-label">TITULAR DE CUENTA</p>
+          <p class="holder-name">Edgar Hernandez</p>
+        </div>
+      </section>
+
+      <!-- Santander Card -->
+      <section class="bank-card card-santander" aria-label="Tarjeta Santander">
+        <div class="card-top">
+          <span class="bank-brand">Santander</span>
+          <!-- Contactless Waves SVG -->
+          <svg class="nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round">
+            <path d="M8.5 16.5a6.5 6.5 0 0 1 0-9"></path>
+            <path d="M12 19a10 10 0 0 0 0-14"></path>
+            <path d="M15.5 21.5a13.5 13.5 0 0 0 0-19"></path>
+          </svg>
+        </div>
+
+        <div class="card-data-section">
+          <p class="card-data-label">NÚMERO DE TARJETA / DÉBITO</p>
+          <div class="data-pill">
+            <span class="data-number" id="santander-number">5579100248913209</span>
+            <button type="button" class="copy-btn"
+              onclick="copyCardData('santander-number', this, 'Tarjeta Santander')">
+              <svg class="copy-icon" viewBox="0 0 24 24">
+                <path
+                  d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+              </svg>
+              <span>Copiar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-holder">
+          <p class="holder-label">BENEFICIARIO</p>
+          <p class="holder-name">Edgar Hernandez</p>
+        </div>
+      </section>
+
+      <!-- Nu Card -->
+      <section class="bank-card card-nu" aria-label="Tarjeta Nu">
+        <div class="card-top">
+          <span class="bank-brand">Nu</span>
+          <!-- Contactless Waves SVG -->
+          <svg class="nfc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round">
+            <path d="M8.5 16.5a6.5 6.5 0 0 1 0-9"></path>
+            <path d="M12 19a10 10 0 0 0 0-14"></path>
+            <path d="M15.5 21.5a13.5 13.5 0 0 0 0-19"></path>
+          </svg>
+        </div>
+
+        <div class="card-data-section">
+          <p class="card-data-label">CLABE / CELULAR STP</p>
+          <div class="data-pill">
+            <span class="data-number" id="nu-number">6381800001293847105</span>
+            <button type="button" class="copy-btn" onclick="copyCardData('nu-number', this, 'Cuenta Nu')">
+              <svg class="copy-icon" viewBox="0 0 24 24">
+                <path
+                  d="M16 1H4C2.9 1 2 1.9 2 3v14h2V3h12V1zm3 4H8C6.9 5 6 5.9 6 7v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+              </svg>
+              <span>Copiar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-holder">
+          <p class="holder-label">CUENTA DESTINO</p>
+          <p class="holder-name">Edgar Hernandez</p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Instructions / Steps Card -->
+    <section class="steps-card" aria-label="Instrucciones">
+      <div class="steps-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <h2>Pasos para tu transferencia</h2>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <span class="step-badge">1</span>
+          <p class="step-text">Toca el botón <strong>Copiar</strong> en la cuenta bancaria de tu preferencia arriba.</p>
+        </div>
+        <div class="step-item">
+          <span class="step-badge">2</span>
+          <p class="step-text">Abre la app de tu banco e ingresa el importe exacto vía transferencia SPEI.</p>
+        </div>
+        <div class="step-item">
+          <span class="step-badge">3</span>
+          <p class="step-text">Presiona el botón verde inferior para remitir tu comprobante en WhatsApp al instante.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WhatsApp CTA Button -->
+    <a id="whatsapp-link" class="whatsapp-btn"
+      href="https://wa.me/?text=Hola%20AIT3D%20Software,%20acabo%20de%20realizar%20mi%20transferencia.%20Adjunto%20mi%20comprobante."
+      target="_blank" rel="noopener noreferrer">
+      <div class="whatsapp-main-row">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.66c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.02-1.25-.75-.67-1.26-1.5-1.41-1.75-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.13-.56-1.34-.76-1.84-.2-.49-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.77 2.71 4.3 3.8 2.52 1.09 2.52.73 2.98.69.45-.04 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.12-.22-.19-.47-.32z" />
+        </svg>
+        <span>Enviar Comprobante WhatsApp</span>
+      </div>
+      <span class="whatsapp-subtext">Notifícanos tu transferencia para procesar tu servicio de inmediato</span>
+    </a>
+
+    <!-- Footer Attribution Pill -->
+    <footer class="footer">
+      <div class="footer-pill">
+        <img src="assets/logo.png" alt="AIT3D" width="16" height="16">
+        <span>Desarrollado por <strong>AIT3D software</strong></span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Floating Toast Notification -->
+  <div id="toast" role="alert" aria-live="polite">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+      stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toast-text">Copiado al portapapeles</span>
+  </div>
+
+  <script>
+    // ==========================================
+    // CONFIGURACIÓN PERSONALIZADA PARA AIT3D
+    // ==========================================
+    // Coloca aquí tu número de WhatsApp con código de país (Ejemplo México: "5215512345678" o "52" + tus 10 dígitos)
+    const WHATSAPP_PHONE = "525570790228"; // <-- Pon aquí tu número, ej: "521234567890"
+    const WHATSAPP_MSG = "Hola AIT3D Software, acabo de realizar mi transferencia. Adjunto mi comprobante.";
+
+    // Inicializar enlace de WhatsApp si hay número configurado
+    if (WHATSAPP_PHONE) {
+      const waBtn = document.getElementById('whatsapp-link');
+      waBtn.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(WHATSAPP_MSG)}`;
+    }
+
+    // ==========================================
+    // FUNCIÓN PARA COPIAR AL PORTAPAPELES
+    // ==========================================
+    function copyCardData(elementId, btnElement, cardLabel) {
+      const textToCopy = document.getElementById(elementId).innerText.trim();
+
+      const onSuccess = () => {
+        // Haptic feedback en móviles soportados
+        if (navigator.vibrate) {
+          navigator.vibrate(40);
+        }
+
+        // Cambiar apariencia del botón
+        const originalContent = btnElement.innerHTML;
+        btnElement.classList.add('copied');
+        btnElement.innerHTML = `
+          <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>¡Listo!</span>
+        `;
+
+        showToast(`✓ ${cardLabel || 'Dato'} copiado`);
+
+        setTimeout(() => {
+          btnElement.innerHTML = originalContent;
+          btnElement.classList.remove('copied');
+        }, 1800);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(err => {
+          fallbackCopyText(textToCopy, onSuccess);
+        });
+      } else {
+        fallbackCopyText(textToCopy, onSuccess);
+      }
+    }
+
+    // Fallback para navegadores antiguos o contextos no seguros
+    function fallbackCopyText(text, callback) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        callback();
+      } catch (err) {
+        console.error('Error al copiar:', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // Notificación Toast flotante
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.textContent = message;
+      toast.classList.add('show');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2200);
+    }
+  </script>
+
+</body>
+
+</html>
