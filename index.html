@@ -39,6 +39,7 @@
       --primary-glow: rgba(0, 155, 98, 0.25);
       --accent-blue: #38bdf8;
       --accent-gold: #f59e0b;
+      --accent-red: #ff4757;
       --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -274,6 +275,15 @@
       color: var(--accent-gold);
     }
 
+    .project-tag.red {
+      color: var(--accent-red);
+    }
+
+    .project-thumb.thumb-retail {
+      background: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
+      border: 1px solid rgba(255, 71, 87, 0.35);
+    }
+
     /* Flecha / Botón de Acción */
     .card-arrow-btn {
       width: 2.25rem;
@@ -428,7 +438,7 @@
           </svg>
           Proyectos Disponibles
         </span>
-        <span class="section-counter">2 Demos</span>
+        <span class="section-counter">3 Demos</span>
       </div>
 
       <!-- PROYECTO 1: AIT3D Transferencias Bancarias NFC -->
@@ -492,6 +502,42 @@
           <span class="feature-chip">💬 Cotización WhatsApp</span>
           <span class="feature-chip">📸 Instagram</span>
           <span class="feature-chip">🔵 Facebook</span>
+        </div>
+      </a>
+
+      <!-- PROYECTO 3: Súper Precio / Caja Registradora & Escáner -->
+      <a class="project-card" href="superPrecio.html" title="Abrir demo de Súper Precio">
+        <div class="card-top-row">
+          <div class="project-identity">
+            <div class="project-thumb thumb-retail">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ff4757" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+            </div>
+            <div class="project-title-group">
+              <h3>Súper Precio - Caja Registradora</h3>
+              <span class="project-tag red">POS &amp; CÓDIGOS DE BARRAS</span>
+            </div>
+          </div>
+          <div class="card-arrow-btn" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <p class="project-desc">
+          Punto de venta interactivo con escáner de códigos de barras/QR en tiempo real por cámara, ticket dinámico con sonidos sintetizados y fábrica de etiquetas imprimibles.
+        </p>
+
+        <div class="card-features-row">
+          <span class="feature-chip">📷 Escáner en Cámara</span>
+          <span class="feature-chip">🛒 Caja Registradora</span>
+          <span class="feature-chip">🏷️ Generador de Códigos</span>
+          <span class="feature-chip">🖨️ Impresión de Etiquetas</span>
         </div>
       </a>
 

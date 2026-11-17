@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Súper Juguetería</title>
+  <!-- Librerías ligeras desde CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    :root {
+      --primary: #ff4757;
+      --secondary: #2ed573;
+      --dark: #2f3542;
+      --bg: #f1f2f6;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--dark); padding-bottom: 40px; }
+    
+    /* Navegación superior */
+    .tabs {
+      display: flex; background: var(--dark); position: sticky; top: 0; z-index: 100;
+    }
+    .tab {
+      flex: 1; padding: 15px; text-align: center; color: white; font-weight: bold;
+      border: none; background: transparent; font-size: 16px; cursor: pointer;
+    }
+    .tab.active { background: var(--primary); }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Estilos Caja Registradora */
+    #reader {
+      width: 100%; border-radius: 16px; overflow: hidden; background: #000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-bottom: 15px;
+    }
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 18px;
+      font-weight: bold; color: white; cursor: pointer; margin-bottom: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-green { background: var(--secondary); }
+    .btn-red { background: var(--primary); }
+    .btn-dark { background: var(--dark); }
+
+    .total-box {
+      background: #1e272e; color: #0be881; padding: 15px 20px; border-radius: 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 15px; font-family: monospace;
+    }
+    .total-box span:first-child { font-size: 18px; color: #d2dae2; }
+    .total-box span:last-child { font-size: 36px; font-weight: bold; }
+
+    .ticket {
+      background: white; border-radius: 12px; padding: 15px; min-height: 180px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px;
+    }
+    .ticket-item {
+      display: flex; justify-content: space-between; padding: 10px 0;
+      border-bottom: 1px dashed #ced6e0; font-size: 18px; font-weight: 500;
+    }
+
+    /* Estilos Fábrica de Etiquetas */
+    .card {
+      background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    input {
+      width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #dfe4ea;
+      border-radius: 10px; font-size: 16px;
+    }
+    .barcode-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+    }
+    .barcode-item {
+      background: white; border: 2px dashed #a4b0be; border-radius: 10px;
+      padding: 10px; text-align: center; position: relative;
+    }
+    .barcode-item svg { width: 100%; height: auto; max-height: 70px; }
+    .barcode-title { font-weight: bold; font-size: 14px; margin-bottom: 2px; }
+    .barcode-price { color: var(--primary); font-weight: bold; font-size: 16px; }
+    .delete-btn {
+      position: absolute; top: 5px; right: 5px; background: #ff4757; color: white;
+      border: none; border-radius: 50%; width: 24px; height: 24px; font-weight: bold;
+    }
+
+    /* Vista exclusiva para imprimir */
+    @media print {
+      .tabs, .no-print, .delete-btn { display: none !important; }
+      body { background: white; padding: 0; }
+      .container { max-width: 100%; padding: 0; }
+      .barcode-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
+      .barcode-item { border: 1px solid #000; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="tabs no-print">
+    <a href="index.html" class="tab" style="text-decoration: none; flex: 0.45; background: #1e272e; display: flex; align-items: center; justify-content: center; font-size: 14px; gap: 4px; border-right: 1px solid rgba(255,255,255,0.1);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      <span>Menú</span>
+    </a>
+    <button class="tab active" onclick="switchTab('caja')">🛒 Caja Registradora</button>
+    <button class="tab" onclick="switchTab('fabrica')">🏷️ Crear Códigos</button>
+  </div>
+
+  <div class="container">
+    <!-- VISTA 1: CAJA REGISTRADORA -->
+    <div id="view-caja" class="view active">
+      <div id="reader"></div>
+      <button id="btn-scan" class="btn btn-green" onclick="toggleScanner()">📷 Encender Escáner</button>
+
+      <div class="total-box">
+        <span>TOTAL A PAGAR</span>
+        <span id="total-display">$0</span>
+      </div>
+
+      <div class="ticket" id="ticket-list">
+        <div style="text-align:center; color:#a4b0be; padding-top:40px;">
+          Pasa un juguete frente a la cámara...
+        </div>
+      </div>
+
+      <button class="btn btn-red" onclick="cobrar()">💰 Cobrar y Limpiar Ticket</button>
+    </div>
+
+    <!-- VISTA 2: FÁBRICA DE ETIQUETAS -->
+    <div id="view-fabrica" class="view">
+      <div class="card no-print">
+        <h3 style="margin-top:0;">Nuevo Juguete</h3>
+        <input type="text" id="prod-name" placeholder="Nombre (ej. Manzana, Leche, Osito)">
+        <input type="number" id="prod-price" placeholder="Precio (ej. 15)">
+        <button class="btn btn-green" onclick="addProduct()">➕ Generar Código</button>
+        <button class="btn btn-dark" onclick="window.print()">🖨️ Imprimir Etiquetas</button>
+      </div>
+
+      <div class="barcode-grid" id="barcode-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // Base de datos local con 3 productos de ejemplo precargados
+    let products = JSON.parse(localStorage.getItem('super_products')) || [
+      { code: '7501001', name: 'Manzana Roja', price: 10 },
+      { code: '7501002', name: 'Caja de Leche', price: 25 },
+      { code: '7501003', name: 'Jugo de Naranja', price: 15 }
+    ];
+
+    let cart = [];
+    let html5QrCode = null;
+    let isScanning = false;
+    let lastScanTime = 0;
+    let audioCtx = null;
+
+    // Generar sonidos sintetizados (sin archivos externos)
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playBeep() {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1200, audioCtx.currentTime); // Tono agudo tipo escáner
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    }
+
+    function playCashRegister() {
+      initAudio();
+      const notes = [880, 1108.73, 1318.51]; // Acorde alegre de cobro
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (i * 0.08));
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime + (i * 0.08));
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + (i * 0.08) + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + (i * 0.08));
+        osc.stop(audioCtx.currentTime + (i * 0.08) + 0.3);
+      });
+    }
+
+    // Cambiar pestañas
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      if (tab === 'caja') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('view-caja').classList.add('active');
+      } else {
+        if (isScanning) toggleScanner(); // Apagar cámara al salir de caja
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('view-fabrica').classList.add('active');
+        renderBarcodes();
+      }
+    }
+
+    // Control de Cámara (Optimizado para iPhone)
+    async function toggleScanner() {
+      initAudio(); // Desbloquea sonido en iOS Safari
+      const btn = document.getElementById('btn-scan');
+
+      if (isScanning) {
+        await html5QrCode.stop();
+        isScanning = false;
+        btn.textContent = '📷 Encender Escáner';
+        btn.className = 'btn btn-green';
+        return;
+      }
+
+      html5QrCode = new Html5Qrcode("reader");
+      const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 120 }, // Rectángulo horizontal ideal para barras
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.CODE_128,
+          Html5QrcodeSupportedFormats.EAN_13,
+          Html5QrcodeSupportedFormats.EAN_8
+        ]
+      };
+
+      try {
+        await html5QrCode.start(
+          { facingMode: "environment" }, // Cámara trasera del iPhone
+          config,
+          onScanSuccess
+        );
+        isScanning = true;
+        btn.textContent = '⏹️ Apagar Escáner';
+        btn.className = 'btn btn-dark';
+      } catch (err) {
+        alert("No se pudo abrir la cámara. Asegúrate de abrir la página con HTTPS.");
+      }
+    }
+
+    // Cuando lee un código
+    function onScanSuccess(decodedText) {
+      const now = Date.now();
+      if (now - lastScanTime < 2000) return; // Cooldown de 2 segundos para niños
+      lastScanTime = now;
+
+      playBeep();
+      const found = products.find(p => p.code === decodedText);
+
+      if (found) {
+        cart.push(found);
+        renderTicket();
+      } else {
+        // Si escanea algo de la despensa real que no está registrado
+        const addQuick = confirm(`Código ${decodedText} no registrado. ¿Quieres agregarlo como juguete nuevo?`);
+        if (addQuick) {
+          const name = prompt("Nombre del producto:");
+          const price = parseFloat(prompt("Precio ($):"));
+          if (name && !isNaN(price)) {
+            const newProd = { code: decodedText, name, price };
+            products.push(newProd);
+            saveProducts();
+            cart.push(newProd);
+            renderTicket();
+          }
+        }
+      }
+    }
+
+    function renderTicket() {
+      const list = document.getElementById('ticket-list');
+      const totalDisplay = document.getElementById('total-display');
+      
+      if (cart.length === 0) {
+        list.innerHTML = '<div style="text-align:center; color:#a4b0be; padding-top:40px;">Pasa un juguete frente a la cámara...</div>';
+        totalDisplay.textContent = '$0';
+        return;
+      }
+
+      let total = 0;
+      list.innerHTML = cart.map(item => {
+        total += item.price;
+        return `<div class="ticket-item">
+          <span>${item.name}</span>
+          <span>$${item.price}</span>
+        </div>`;
+      }).join('');
+
+      totalDisplay.textContent = `$${total}`;
+    }
+
+    function cobrar() {
+      if (cart.length === 0) return;
+      playCashRegister();
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      alert(`¡Gracias por su compra!\nTotal cobrado: $${total}`);
+      cart = [];
+      renderTicket();
+    }
+
+    // Gestión de Códigos de Barras
+    function saveProducts() {
+      localStorage.setItem('super_products', JSON.stringify(products));
+    }
+
+    function addProduct() {
+      const nameInput = document.getElementById('prod-name');
+      const priceInput = document.getElementById('prod-price');
+      const name = nameInput.value.trim();
+      const price = parseFloat(priceInput.value);
+
+      if (!name || isNaN(price)) {
+        alert("Escribe el nombre del juguete y su precio.");
+        return;
+      }
+
+      // Genera un código numérico único de 7 dígitos
+      const code = '750' + Math.floor(1000 + Math.random() * 9000);
+      products.push({ code, name, price });
+      saveProducts();
+
+      nameInput.value = '';
+      priceInput.value = '';
+      renderBarcodes();
+    }
+
+    function deleteProduct(index) {
+      products.splice(index, 1);
+      saveProducts();
+      renderBarcodes();
+    }
+
+    function renderBarcodes() {
+      const grid = document.getElementById('barcode-list');
+      grid.innerHTML = products.map((p, idx) => `
+        <div class="barcode-item">
+          <button class="delete-btn no-print" onclick="deleteProduct(${idx})">×</button>
+          <div class="barcode-title">${p.name}</div>
+          <svg id="barcode-${idx}"></svg>
+          <div class="barcode-price">$${p.price}</div>
+        </div>
+      `).join('');
+
+      products.forEach((p, idx) => {
+        JsBarcode(`#barcode-${idx}`, p.code, {
+          format: "CODE128",
+          lineColor: "#000",
+          width: 2,
+          height: 50,
+          displayValue: true,
+          fontSize: 12,
+          margin: 5
+        });
+      });
+    }
+
+    // Inicializar vista de códigos
+    renderBarcodes();
+  </script>
+</body>
+</html>
