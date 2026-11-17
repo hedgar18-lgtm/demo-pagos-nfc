@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Mat;Snack;;;
+FN:Snack Mat
+ORG:Snack Mat
+TITLE:El toque delicioso de tu celebración
+TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+525570790228
+NOTE:Cotizaciones y reservaciones para eventos y celebraciones especiales. Desarrollado por AIT3D Software.
+URL;TYPE=WORK:https://snackmat.mx
+END:VCARD
